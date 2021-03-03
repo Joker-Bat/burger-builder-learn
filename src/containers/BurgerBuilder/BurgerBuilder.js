@@ -35,15 +35,32 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount = () => {
+    // console.log(this.state.ingredients);
     axios
       .get("/ingredients.json")
       .then((res) => {
+        // console.log(res.data);
         this.setState({ ingredients: res.data });
         this.updatePurchaseState(this.state.ingredients);
+        this.updateTotalPrice(this.state.ingredients);
       })
       .catch((err) => {
         this.setState({ error: true });
       });
+  };
+
+  updateTotalPrice = (ingredients) => {
+    const priceList = Object.keys(ingredients).map((item) => {
+      return INGREDIENT_PRICES[item];
+    });
+    const ingredientList = Object.values(ingredients).map((ing) => ing);
+    let currentTotalPrice = 0;
+    ingredientList.forEach((ing, index) => {
+      return ing
+        ? (currentTotalPrice += ing * priceList[index])
+        : currentTotalPrice;
+    });
+    this.setState({ totalPrice: currentTotalPrice });
   };
 
   updatePurchaseState = (ingredients) => {
@@ -95,29 +112,45 @@ class BurgerBuilder extends Component {
 
   purchaseContinueHandler = () => {
     // alert("Your purchase was successful")
-    this.setState({ loading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: "Shanmugam M",
-        address: {
-          street: "testCity",
-          city: "salem",
-          state: "Thamizhnadu",
-        },
-      },
-      deliveryMethod: "fastest",
-    };
+    // this.setState({ loading: true });
+    // const order = {
+    //   ingredients: this.state.ingredients,
+    //   price: this.state.totalPrice,
+    //   customer: {
+    //     name: "Shanmugam M",
+    //     address: {
+    //       street: "testCity",
+    //       city: "salem",
+    //       state: "Thamizhnadu",
+    //     },
+    //   },
+    //   deliveryMethod: "fastest",
+    // };
 
-    axios
-      .post("/orders.json", order)
-      .then((response) => {
-        this.setState({ loading: false, purchasing: false });
-      })
-      .catch((err) => {
-        this.setState({ loading: false, purchasing: false });
-      });
+    // axios
+    //   .post("/orders.json", order)
+    //   .then((response) => {
+    //     this.setState({ loading: false, purchasing: false });
+    //   })
+    //   .catch((err) => {
+    //     this.setState({ loading: false, purchasing: false });
+    //   });
+
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(
+        encodeURIComponent(i) +
+          "=" +
+          encodeURIComponent(this.state.ingredients[i])
+      );
+    }
+
+    const queryString = queryParams.join("&");
+
+    this.props.history.push({
+      pathname: "/checkout",
+      search: "?" + queryString,
+    });
   };
 
   render() {

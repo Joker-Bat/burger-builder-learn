@@ -3,6 +3,8 @@
   box-sizing: border-box;
   display: block;
   width: 100%;
+  min-width: 150px;
+  text-align: center;
 }
 
 .NavigationItem a {
