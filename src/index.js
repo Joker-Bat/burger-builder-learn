@@ -5,11 +5,22 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 // Redux
-import reducer from "./store/reducer.js";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
 
-const store = createStore(reducer);
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import burgerBuilderReducer from "./store/reducers/burgerBuilder.js";
+import orderReducer from "./store/reducers/order";
+
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const rootReducer = combineReducers({
+  burgerBuilder: burgerBuilderReducer,
+  order: orderReducer,
+});
+
+const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
 
 ReactDOM.render(
   <React.StrictMode>

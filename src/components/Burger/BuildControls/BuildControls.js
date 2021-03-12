@@ -4,22 +4,24 @@ import classes from "./BuildControls.module.css";
 import BuildControl from "./BuildControl/BuildControl";
 
 // From reducer state
-import { ingredientsName } from "../../../store/reducer";
+// import { ingredientsName } from "../../../store/reducers/burgerBuilder";
 
-const controls = [];
+// const controls = [];
 
-ingredientsName.forEach((item) => {
-  controls.push({
-    label: item.replace(/^\w/, (c) => c.toUpperCase()),
-    type: item,
-  });
-});
+// ingredientsName.forEach((item) => {
+//   controls.push({
+//     label: item.replace(/^\w/, (c) => c.toUpperCase()),
+//     type: item,
+//   });
+// });
 
-// Controls array look like this [
-// { label: "Salad", type: "salad" },
-//   { label: "Bacon", type: "bacon" },
-//   { label: "Cheese", type: "cheese" },
-//   { label: "Meat", type: "meat" }]
+// Controls array look like this
+const controls = [
+  { label: "Salad", type: "salad" },
+  { label: "Bacon", type: "bacon" },
+  { label: "Cheese", type: "cheese" },
+  { label: "Meat", type: "meat" },
+];
 
 const BuildControls = (props) => {
   return (
