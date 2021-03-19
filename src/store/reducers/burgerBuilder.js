@@ -1,11 +1,12 @@
 import * as actionTypes from "../actions/actionTypes";
-import { updateObject } from "../utility";
+import { updateObject } from "../../shared/utility";
 
 const initialState = {
   ingredients: null,
   totalPrice: 4,
   error: false,
   loading: false,
+  building: false,
 };
 
 //used in BuildControls.js
@@ -26,6 +27,7 @@ const addIngredient = (state, action) => {
   const updateState = {
     ingredients: updatedIngredients,
     totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    building: true,
   };
   return updateObject(state, updateState);
 };
@@ -41,6 +43,7 @@ const removeIngredient = (state, action) => {
   const updateRemoveState = {
     ingredients: updatedRemoveIngredients,
     totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
+    building: true,
   };
   return updateObject(state, updateRemoveState);
 };
@@ -56,6 +59,7 @@ const setIngredients = (state, action) => {
     ingredients: updateSetIngredients,
     totalPrice: 4,
     error: false,
+    building: false,
   };
   return updateObject(state, updateSetState);
 };

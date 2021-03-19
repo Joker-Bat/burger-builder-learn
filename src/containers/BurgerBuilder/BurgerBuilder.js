@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 import Aux from "../../hoc/Aux/Aux";
 import Burger from "../../components/Burger/Burger";
@@ -17,7 +17,7 @@ import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as actionCreators from "../../store/actions/index";
 import { connect } from "react-redux";
 
-class BurgerBuilder extends Component {
+class BurgerBuilder extends PureComponent {
   //   constructor(props) {
   //     super(props);
   //     this.state = {...};
@@ -33,8 +33,7 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props);
-    this.props.initIngredients();
+      this.props.initIngredients();
   };
 
   updatePurchaseState = (ingredients) => {
@@ -46,7 +45,12 @@ class BurgerBuilder extends Component {
   };
 
   purchaseHandler = () => {
-    this.setState({ purchasing: true });
+    if (this.props.isAuthenticated) {
+      this.setState({ purchasing: true });
+    } else {
+      this.props.onSetAuthRedirectPath("/checkout");
+      this.props.history.push("/auth");
+    }
   };
 
   purchaseCancelHandler = () => {
@@ -89,6 +93,7 @@ class BurgerBuilder extends Component {
             price={this.props.totalPrice}
             purchasable={this.updatePurchaseState(this.props.ingredients)}
             ordered={this.purchaseHandler}
+            isAuth={this.props.isAuthenticated}
           />
         </Aux>
       );
@@ -105,8 +110,6 @@ class BurgerBuilder extends Component {
     if (this.state.loading) {
       orderSummary = <Spinner />;
     }
-
-    // console.log(disabledInfo);
 
     return (
       <Aux>
@@ -127,6 +130,7 @@ const matchStateToProps = (state) => {
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
     error: state.burgerBuilder.error,
+    isAuthenticated: state.auth.token !== null,
   };
 };
 
@@ -137,6 +141,8 @@ const matchDispatchToProps = (dispatch) => {
       dispatch(actionCreators.removeIngredient(ingName)),
     initIngredients: () => dispatch(actionCreators.initIngredients()),
     onPurchaseInit: () => dispatch(actionCreators.purchaseInit()),
+    onSetAuthRedirectPath: (path) =>
+      dispatch(actionCreators.setAuthRedirectPath(path)),
   };
 };
 
