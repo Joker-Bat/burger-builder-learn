@@ -17,7 +17,7 @@ import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as actionCreators from "../../store/actions/index";
 import { connect } from "react-redux";
 
-class BurgerBuilder extends PureComponent {
+export class BurgerBuilder extends PureComponent {
   //   constructor(props) {
   //     super(props);
   //     this.state = {...};
